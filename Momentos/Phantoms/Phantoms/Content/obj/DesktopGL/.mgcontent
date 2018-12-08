@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/papa francisco/GitHub/Fantasmas/Momentos/Phantoms/Phantoms/Content/Graphics/fantasminha.png</File>
+    <File>C:/Users/papa francisco/GitHub/Fantasmas/Momentos/Phantoms/Phantoms/Content/Graphics/paisagi.jpg</File>
+    <File>C:/Users/papa francisco/GitHub/Fantasmas/Momentos/Phantoms/Phantoms/Content/Graphics/posto.jpg</File>
+    <File>C:/Users/papa francisco/GitHub/Fantasmas/Momentos/Phantoms/Phantoms/Content/Sounds/metalico.mp3</File>
+    <File>C:/Users/papa francisco/GitHub/Fantasmas/Momentos/Phantoms/Phantoms/Content/Sounds/Marseille.mp3</File>
+    <File>C:/Users/papa francisco/GitHub/Fantasmas/Momentos/Phantoms/Phantoms/Content/Sounds/dominos_revisitado.mp3</File>
+    <File>C:/Users/papa francisco/GitHub/Fantasmas/Momentos/Phantoms/Phantoms/Content/Graphics/paisagi_16bit.png</File>
+    <File>C:/Users/papa francisco/GitHub/Fantasmas/Momentos/Phantoms/Phantoms/Content/Graphics/vortex.png</File>
+  </SourceFiles>
+</SourceFileCollection>

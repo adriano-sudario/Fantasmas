@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SourceFile>C:/Users/papa francisco/GitHub/Fantasmas/Momentos/Phantoms/Phantoms/Content/Sounds/Marseille.mp3</SourceFile>
+  <SourceTime>2018-11-20T16:51:29.0429844-02:00</SourceTime>
+  <DestFile>C:/Users/papa francisco/GitHub/Fantasmas/Momentos/Phantoms/Phantoms/Content/bin/DesktopGL/Sounds/Marseille.xnb</DestFile>
+  <DestTime>2018-12-08T13:19:40.8909777-02:00</DestTime>
+  <Importer>Mp3Importer</Importer>
+  <ImporterTime>2017-03-01T12:05:36-03:00</ImporterTime>
+  <Processor>SoundEffectProcessor</Processor>
+  <ProcessorTime>2017-03-01T12:05:36-03:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Best</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>
