@@ -85,7 +85,7 @@ namespace Phantoms.Scenes
             Camera.AreaHeight = Place.Height;
             Vortex.StopSpin();
             Vortex.SetOrigin(0);
-            Vortex.MoveTo(GetVortexPlacePosition(local) * Global.ScreenScale);
+            Vortex.MoveTo(GetVortexPlacePosition(local) * Global.ScreenScale, false);
             Vortex.SetOrigin(.5f);
             Vortex.Spin(Global.HorizontalDirection.Left, 2f);
         }
