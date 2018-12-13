@@ -72,12 +72,12 @@ namespace Phantoms.Scenes
             {
                 case Local.Paradise:
                     PlaceName = "Paradise";
-                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("paisagi")));
+                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("paisagi_pixelada")));
                     break;
 
                 case Local.GasStation:
                     PlaceName = "Gas Station";
-                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("posto")));
+                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("posto_pixelado")));
                     break;
             }
 

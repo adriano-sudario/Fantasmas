@@ -52,7 +52,6 @@ namespace Phantoms
 
             AdjustScreen(true);
 
-            Body place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("paisagi")));
             Texture2D phantomTexture = Loader.LoadTexture("fantasminha");
             Phantom player = Phantom.New(phantomTexture, Vector2.Zero);
             List<PhantomBotLog> botLogs = Loader.LoadDeserializedJsonFile<List<PhantomBotLog>>("phatom_bots");
