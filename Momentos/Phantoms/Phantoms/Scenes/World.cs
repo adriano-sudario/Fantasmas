@@ -72,12 +72,12 @@ namespace Phantoms.Scenes
             {
                 case Local.Paradise:
                     PlaceName = "Paradise";
-                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("paisagi")));
+                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("paisagi_pixelada")));
                     break;
 
                 case Local.GasStation:
                     PlaceName = "Gas Station";
-                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("posto")));
+                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("posto_pixelado")));
                     break;
             }
 
@@ -85,7 +85,7 @@ namespace Phantoms.Scenes
             Camera.AreaHeight = Place.Height;
             Vortex.StopSpin();
             Vortex.SetOrigin(0);
-            Vortex.MoveTo(GetVortexPlacePosition(local) * Global.ScreenScale);
+            Vortex.MoveTo(GetVortexPlacePosition(local) * Global.ScreenScale, false);
             Vortex.SetOrigin(.5f);
             Vortex.Spin(Global.HorizontalDirection.Left, 2f);
         }
