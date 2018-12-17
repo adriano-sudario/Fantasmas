@@ -2,13 +2,16 @@
 using Microsoft.Xna.Framework.Graphics;
 using Phantoms.Entities.Sprites;
 using Phantoms.Helpers;
+using Phantoms.Scenes;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Phantoms.Entities
 {
     public class Vortex : Body
     {
-        public string Destiny { get; set; }
+        public World.Local Destiny { get; set; }
 
         public Vortex(Texture2D spriteSheet, Vector2 position) : base(position, sprite: GetAnimationDefault(spriteSheet)) { }
 
@@ -25,6 +28,15 @@ namespace Phantoms.Entities
             });
 
             return new AnimatedSprite(spriteSheet, animationFrames);
+        }
+
+        public void SetRandomDestiny(World.Local currentPlace)
+        {
+            Random random = new Random();
+            IEnumerable<World.Local> avaiablePlaces = (from w in World.ExistingPlaces
+                                                       where w != currentPlace
+                                                       select w);
+            Destiny = avaiablePlaces.ElementAt(random.Next(avaiablePlaces.Count()));
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Phantoms.Scenes
 {
     public class World : Cyclic
     {
-        public enum Local { Paradise, GasStation }
+        public enum Local { Paradise, GasStation, Lake, LittleHouse, BrownGrass }
 
         public string PlaceName { get; private set; }
         public Body Place { get; private set; }
@@ -25,15 +25,17 @@ namespace Phantoms.Scenes
         public List<PhantomBot> PhantomBots { get; private set; }
         public float ElapsedTime { get; set; }
 
+        public static Local[] ExistingPlaces { get; } = (Local[])Enum.GetValues(typeof(Local));
+
         public World(Phantom player, List<PhantomBot> phantomBots)
         {
             PhantomBots = new List<PhantomBot>();
             Player = player;
             PhantomBots = phantomBots;
             Vortex = new Vortex("vortex", Vector2.Zero);
-            SetPlace(Local.Paradise);
-            Player.CurrentPlace = PlaceName;
             Random random = new Random();
+            SetPlace(ExistingPlaces[random.Next(ExistingPlaces.Length)]);
+            Player.CurrentPlace = PlaceName;
             player.MoveTo(new Vector2(random.Next(Camera.AreaWidth - player.Width + 1), random.Next(Camera.AreaHeight - player.Height + 1)));
             PlayerLog = new PhantomBotLog()
             {
@@ -61,6 +63,15 @@ namespace Phantoms.Scenes
                 case "Gas Station":
                     return Local.GasStation;
 
+                case "Lake":
+                    return Local.Lake;
+
+                case "Little House":
+                    return Local.LittleHouse;
+
+                case "Brown Grass":
+                    return Local.BrownGrass;
+
                 default:
                     throw new Exception("kd esse luga meu xapa");
             }
@@ -72,12 +83,27 @@ namespace Phantoms.Scenes
             {
                 case Local.Paradise:
                     PlaceName = "Paradise";
-                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("paisagi_pixelada")));
+                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("paisagi")));
                     break;
 
                 case Local.GasStation:
                     PlaceName = "Gas Station";
-                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("posto_pixelado")));
+                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("posto")));
+                    break;
+
+                case Local.Lake:
+                    PlaceName = "Lake";
+                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("lago")));
+                    break;
+
+                case Local.LittleHouse:
+                    PlaceName = "Little House";
+                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("casinha")));
+                    break;
+
+                case Local.BrownGrass:
+                    PlaceName = "Brown Grass";
+                    Place = new Body(Vector2.Zero, sprite: new Sprite(Loader.LoadTexture("matagal")));
                     break;
             }
 
@@ -88,6 +114,7 @@ namespace Phantoms.Scenes
             Vortex.MoveTo(GetVortexPlacePosition(local) * Global.ScreenScale, false);
             Vortex.SetOrigin(.5f);
             Vortex.Spin(Global.HorizontalDirection.Left, 2f);
+            Vortex.SetRandomDestiny(GetCurrentLocal());
         }
 
         private Vector2 GetVortexPlacePosition(Local local)
@@ -99,6 +126,15 @@ namespace Phantoms.Scenes
 
                 case Local.GasStation:
                     return new Vector2(48, 845);
+
+                case Local.Lake:
+                    return new Vector2(606, 169);
+
+                case Local.LittleHouse:
+                    return new Vector2(840, 192);
+
+                case Local.BrownGrass:
+                    return new Vector2(389, 339);
 
                 default:
                     throw new Exception("kd esse luga meu xapa");

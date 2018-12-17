@@ -7,6 +7,8 @@ using Phantoms.Interfaces;
 using System.Collections.Generic;
 using Phantoms.Manipulators;
 using Phantoms.Scenes;
+using System;
+using System.Linq;
 
 namespace Phantoms.Entities
 {
@@ -145,8 +147,7 @@ namespace Phantoms.Entities
             {
                 if (!IsBot)
                 {
-                    World.Local newPlace = MainGame.World.GetCurrentLocal() == World.Local.Paradise ? World.Local.GasStation : World.Local.Paradise;
-                    MainGame.World.TeleportPlayerTo(newPlace);
+                    MainGame.World.TeleportPlayerTo(MainGame.World.Vortex.Destiny);
                     CurrentPlace = MainGame.World.PlaceName;
                 }
                 IsTeleporting = false;
