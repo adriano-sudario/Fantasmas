@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -16,15 +17,8 @@ namespace Phantoms.Helpers
         {
             get
             {
-                if (_contentFullPath == null || _contentFullPath == "")
-                {
-                    var directory = new DirectoryInfo(Directory.GetCurrentDirectory());
-                    while (directory != null && !directory.GetFiles("app.manifest").Any())
-                    {
-                        directory = directory.Parent;
-                    }
-                    _contentFullPath = directory.GetDirectories("Content")[0].FullName;
-                }
+                if (string.IsNullOrEmpty(_contentFullPath))
+                    _contentFullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Content");
 
                 return _contentFullPath;
             }

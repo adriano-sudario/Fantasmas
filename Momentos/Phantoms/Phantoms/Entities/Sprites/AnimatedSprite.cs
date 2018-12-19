@@ -74,14 +74,6 @@ namespace Phantoms.Entities.Sprites
             ChangeFrame();
         }
 
-        //public void Draw(SpriteBatch spriteBatch, Vector2 position, 
-        //    Color color = default(Color), float rotation = 0, Vector2 origin = default(Vector2),
-        //    float scale = 1, SpriteEffects effect = SpriteEffects.None, float layerDepth = 0, float opacity = 1f)
-        //{
-        //    color = color == default(Color) ? Color.White : color;
-        //    spriteBatch.Draw(spriteStrip, position, CurrentFrame.Source, color * opacity, rotation, origin, scale * Global.ScreenScale, effect, layerDepth);
-        //}
-
         public void Play()
         {
             isPlaying = true;
