@@ -86,18 +86,16 @@ namespace Phantoms.Entities
 
         protected AnimatedSprite Animation { get { return (Sprite as AnimatedSprite); } }
 
-        private static float ScaleDefault { get { return 5f; } }
-
-        public float Speed { get { return 3f; } }
+        public float Speed { get { return .6f; } }
         public bool HasDisappeared { get { return !isActive; } private set { isActive = !value; } }
         public bool IsDisappearing { get; private set; }
         public bool IsTeleporting { get; private set; }
         public bool IsBot { get; protected set; }
         public string CurrentPlace { get; set; }
 
-        public Phantom(AnimatedSprite animation, Vector2 position) : base(position, sprite: animation, scale: ScaleDefault) { }
+        public Phantom(AnimatedSprite animation, Vector2 position) : base(position, sprite: animation, scale: 5f) { }
 
-        public Phantom(Texture2D spriteSheet, Vector2 position) : base(position, sprite: GetAnimationDefault(spriteSheet), scale: ScaleDefault) { }
+        public Phantom(Texture2D spriteSheet, Vector2 position) : base(position, sprite: GetAnimationDefault(spriteSheet), scale: 5f) { }
 
         public static Phantom New(Texture2D spriteSheet, Vector2 position)
         {
@@ -130,7 +128,7 @@ namespace Phantoms.Entities
             input.Update();
             Vector2 direction = input.DirectionalPressing();
             Animation.Change(direction == Vector2.Zero ? "Idle" : "Walk");
-            MoveAndSlide(direction * (Speed * Global.ScreenScale));
+            MoveAndSlide(direction * (Speed * Scale * Global.ScreenScale));
 
             if (input.InteractionJustPressed() && !IsTeleporting && CollidesWith(MainGame.World.Vortex))
                 Teleport();
@@ -151,13 +149,19 @@ namespace Phantoms.Entities
                     CurrentPlace = MainGame.World.PlaceName;
                 }
                 IsTeleporting = false;
-                (sender as Size).ReturnToOriginalSize();
+                Scale = ScaleDefault;
                 StopFade();
                 StopSpin();
                 Sprite.Opacity = 1f;
                 Sprite.Rotation = 0;
                 SetOrigin(0);
                 Animation.Play();
+                if (!IsBot)
+                {
+                    SetOrigin(.5f);
+                    Scale = 0;
+                    Grow(amount: 0.02f, onResizeEnded: (s, ev) => SetOrigin(0));
+                }
             });
         }
 

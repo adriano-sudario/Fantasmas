@@ -35,14 +35,14 @@ namespace Phantoms.Manipulators
 
         private void Resize(float amount, float percent, EventHandler onResizeEnded)
         {
-            multiplier = 1;
+            multiplier = startingScale / affectedBody.ScaleDefault;
             limit = multiplier + (percent / 100);
             this.amount = amount;
             this.onResizeEnded = onResizeEnded;
             IsResizing = true;
         }
 
-        public void ReturnToOriginalSize()
+        public void ReturnToStartingSize()
         {
             affectedBody.Scale = startingScale;
         }
@@ -53,12 +53,12 @@ namespace Phantoms.Manipulators
                 return;
 
             multiplier += amount;
-            affectedBody.Scale = startingScale * multiplier;
+            affectedBody.Scale = affectedBody.ScaleDefault * multiplier;
 
             if ((Math.Sign(amount) < 0 && multiplier <= limit) || (Math.Sign(amount) > 0 && multiplier >= limit))
             {
                 IsResizing = false;
-                affectedBody.Scale = limit;
+                affectedBody.Scale = limit * affectedBody.ScaleDefault;
                 onResizeEnded?.Invoke(this, EventArgs.Empty);
             }
         }

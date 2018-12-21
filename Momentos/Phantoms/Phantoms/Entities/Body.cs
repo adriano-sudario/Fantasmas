@@ -30,6 +30,7 @@ namespace Phantoms.Entities
                 return customCollision ?? new Rectangle((int)(Position.X - spriteSource.X), (int)(Position.Y - spriteSource.Y), Width, Height);
             }
         }
+        public float ScaleDefault { get; private set; }
         public int Width { get { return (int)((Sprite?.Width ?? 0) * (Scale * ScreenScale)); } }
         public int Height { get { return (int)((Sprite?.Height ?? 0) * (Scale * ScreenScale)); } }
         public bool IsFading { get { return fade != null; } }
@@ -43,6 +44,7 @@ namespace Phantoms.Entities
             Sprite = sprite;
             FacingDirection = facingDirection;
             Scale = scale;
+            ScaleDefault = scale;
             this.customCollision = customCollision;
             MoveTo(position);
         }
