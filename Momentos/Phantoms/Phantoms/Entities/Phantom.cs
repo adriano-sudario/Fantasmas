@@ -156,13 +156,8 @@ namespace Phantoms.Entities
                 Sprite.Opacity = 1f;
                 Sprite.Rotation = 0;
                 SetOrigin(0);
+                // Grow(amount: 0.02f, onResizeEnded: (s, ev) => SetOrigin(0));
                 Animation.Play();
-                //if (!IsBot)
-                //{
-                //    SetOrigin(.5f);
-                //    Scale = 0;
-                //    Grow(amount: 0.02f, onResizeEnded: (s, ev) => SetOrigin(0));
-                //}
             });
         }
 

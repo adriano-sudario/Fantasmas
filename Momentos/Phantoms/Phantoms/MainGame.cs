@@ -52,8 +52,8 @@ namespace Phantoms
 
             AdjustScreen(true);
 
-            Texture2D phantomTexture = Loader.LoadTexture("fantasminha");
-            Phantom player = Phantom.New(Loader.LoadTexture("fantasminha_white"), Vector2.Zero);
+            Texture2D phantomTexture = Loader.LoadTexture("fantasminha_white");
+            Phantom player = Phantom.New(phantomTexture, Vector2.Zero);
             List<PhantomBotLog> botLogs = Loader.LoadDeserializedJsonFile<List<PhantomBotLog>>("phatom_bots");
             List<PhantomBot> phantomBots = new List<PhantomBot>();
 

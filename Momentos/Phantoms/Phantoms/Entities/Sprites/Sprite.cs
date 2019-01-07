@@ -37,7 +37,9 @@ namespace Phantoms.Entities.Sprites
                 byte b = (byte)MathHelper.Clamp(((tint.B - 255) + pixels[i].B), 0, 255);
                 pixels[i] = new Color(r, g, b, pixels[i].A);
             }
-            spriteStrip.SetData(pixels);
+            Texture2D tintedTexture = new Texture2D(spriteStrip.GraphicsDevice, spriteStrip.Width, spriteStrip.Height);
+            tintedTexture.SetData(pixels);
+            spriteStrip = tintedTexture;
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, 

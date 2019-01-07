@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace Phantoms
+﻿namespace Phantoms
 {
     public static class Global
     {
