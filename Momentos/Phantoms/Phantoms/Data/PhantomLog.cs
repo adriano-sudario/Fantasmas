@@ -5,7 +5,8 @@ namespace Phantoms.Data
 {
     public class PhantomBotLog
     {
-        public string Type { get; set; }
+        // public string Type { get; set; }
+        public Color Color { get; set; }
         public List<PhantomTraceLog> Traces { get; set; }
     }
 

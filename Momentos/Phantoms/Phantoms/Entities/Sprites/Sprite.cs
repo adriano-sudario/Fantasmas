@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Phantoms.Interfaces;
+using System;
 
 namespace Phantoms.Entities.Sprites
 {
@@ -23,6 +24,20 @@ namespace Phantoms.Entities.Sprites
             Opacity = opacity;
             Origin = origin;
             Rotation = rotation;
+        }
+
+        public void Tint(Color tint)
+        {
+            Color[] pixels = new Color[spriteStrip.Width * spriteStrip.Height];
+            spriteStrip.GetData(pixels);
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                byte r = (byte)MathHelper.Clamp(((tint.R - 255) + pixels[i].R), 0, 255);
+                byte g = (byte)MathHelper.Clamp(((tint.G - 255) + pixels[i].G), 0, 255);
+                byte b = (byte)MathHelper.Clamp(((tint.B - 255) + pixels[i].B), 0, 255);
+                pixels[i] = new Color(r, g, b, pixels[i].A);
+            }
+            spriteStrip.SetData(pixels);
         }
 
         public void Draw(SpriteBatch spriteBatch, Vector2 position, 

@@ -34,12 +34,14 @@ namespace Phantoms.Scenes
             PhantomBots = phantomBots;
             Vortex = new Vortex("vortex", Vector2.Zero);
             Random random = new Random();
+            Color phantomColor = new Color(random.Next(256), random.Next(256), random.Next(256));
+            Player.Sprite.Tint(phantomColor);
             SetPlace(ExistingPlaces[random.Next(ExistingPlaces.Length)]);
             Player.CurrentPlace = PlaceName;
             player.MoveTo(new Vector2(random.Next(Camera.AreaWidth - player.Width + 1), random.Next(Camera.AreaHeight - player.Height + 1)));
             PlayerLog = new PhantomBotLog()
             {
-                Type = "pixelzinho",
+                Color = phantomColor,
                 Traces = new List<PhantomTraceLog>() { new PhantomTraceLog() { ElapsedTime = 0, Position = player.Position } }
             };
 

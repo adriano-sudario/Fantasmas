@@ -17,25 +17,26 @@ namespace Phantoms.Entities
         private List<PhantomTraceLog> traces;
         private int currentTraceIndex = 0;
 
-        public PhantomBot(AnimatedSprite sprite, List<PhantomTraceLog> traces) : base(sprite, traces[0].Position)
+        public PhantomBot(AnimatedSprite sprite, PhantomBotLog log) : base(sprite, log.Traces[0].Position)
         {
-            Initialize(traces);
+            Initialize(log);
         }
 
-        public PhantomBot(Texture2D spriteSheet, List<PhantomTraceLog> traces) : base(spriteSheet, traces[0].Position)
+        public PhantomBot(Texture2D spriteSheet, PhantomBotLog log) : base(spriteSheet, log.Traces[0].Position)
         {
-            Initialize(traces);
+            Initialize(log);
         }
 
-        private void Initialize(List<PhantomTraceLog> traces)
+        private void Initialize(PhantomBotLog log)
         {
             IsBot = true;
-            this.traces = traces;
+            traces = log.Traces;
+            Sprite.Tint(log.Color);
         }
 
-        public static PhantomBot New(Texture2D spriteSheet, List<PhantomTraceLog> traces)
+        public static PhantomBot New(Texture2D spriteSheet, PhantomBotLog log)
         {
-            return new PhantomBot(GetAnimationDefault(spriteSheet), traces);
+            return new PhantomBot(GetAnimationDefault(spriteSheet), log);
         }
 
         public override void Update(GameTime gameTime)
@@ -156,12 +157,12 @@ namespace Phantoms.Entities
                 Sprite.Rotation = 0;
                 SetOrigin(0);
                 Animation.Play();
-                if (!IsBot)
-                {
-                    SetOrigin(.5f);
-                    Scale = 0;
-                    Grow(amount: 0.02f, onResizeEnded: (s, ev) => SetOrigin(0));
-                }
+                //if (!IsBot)
+                //{
+                //    SetOrigin(.5f);
+                //    Scale = 0;
+                //    Grow(amount: 0.02f, onResizeEnded: (s, ev) => SetOrigin(0));
+                //}
             });
         }
 
