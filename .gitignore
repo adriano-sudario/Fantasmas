@@ -14,3 +14,5 @@ Momentos/Phantoms/Phantoms/obj/Release/
 Momentos/Phantoms/Phantoms/Content/Data/phatom_bots\.json
 
 Momentos/Phantoms/\.vs/config/
+
+*.rpp-bak
