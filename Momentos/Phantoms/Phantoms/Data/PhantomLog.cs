@@ -5,7 +5,6 @@ namespace Phantoms.Data
 {
     public class PhantomBotLog
     {
-        // public string Type { get; set; }
         public Color Color { get; set; }
         public List<PhantomTraceLog> Traces { get; set; }
     }
@@ -14,7 +13,11 @@ namespace Phantoms.Data
     {
         public float ElapsedTime { get; set; }
         public string Place { get; set; }
+        public string Expression { get; set; }
+        public float Scale { get; set; }
+        public float Opacity { get; set; }
+        public float Rotation { get; set; }
         public Vector2 Position { get; set; }
-        public bool IsTeleporting { get; set; }
+        public Vector2 Origin { get; set; }
     }
 }

@@ -7,5 +7,9 @@ namespace Phantoms.Interfaces
         void Update();
         Vector2 DirectionalPressing();
         bool InteractionJustPressed();
+        bool ActivateExpressionOne();
+        bool ActivateExpressionTwo();
+        bool ActivateExpressionThree();
+        bool ActivateExpressionFour();
     }
 }

@@ -28,10 +28,10 @@ namespace Phantoms.Entities.Sprites
         private Dictionary<string, Frame[]> sequences;
         private Frame[] currentSequence;
         private int currentFrameIndex;
-        private bool isPlaying = false;
 
         private Frame CurrentFrame { get { return currentSequence[currentFrameIndex]; } }
 
+        public bool IsPlaying { get; private set; } = false;
         public string CurrentName { get; set; }
         public bool IsLooping { get; set; }
         public bool AutoPlay { get; set; }
@@ -63,7 +63,7 @@ namespace Phantoms.Entities.Sprites
 
         public void Update(GameTime gameTime)
         {
-            if (!isPlaying)
+            if (!IsPlaying)
                 return;
 
             elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -76,19 +76,19 @@ namespace Phantoms.Entities.Sprites
 
         public void Play()
         {
-            isPlaying = true;
+            IsPlaying = true;
         }
 
         public void Stop()
         {
-            isPlaying = false;
+            IsPlaying = false;
             elapsedTime = 0;
             currentFrameIndex = 0;
         }
 
         public void Pause()
         {
-            isPlaying = false;
+            IsPlaying = false;
         }
 
         public void Change(string name, bool isLooping = true)

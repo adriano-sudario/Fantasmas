@@ -29,7 +29,6 @@ namespace Phantoms.Scenes
 
         public World(Phantom player, List<PhantomBot> phantomBots)
         {
-            PhantomBots = new List<PhantomBot>();
             Player = player;
             PhantomBots = phantomBots;
             Vortex = new Vortex("vortex", Vector2.Zero);
@@ -42,7 +41,7 @@ namespace Phantoms.Scenes
             PlayerLog = new PhantomBotLog()
             {
                 Color = phantomColor,
-                Traces = new List<PhantomTraceLog>() { new PhantomTraceLog() { ElapsedTime = 0, Position = player.Position } }
+                Traces = new List<PhantomTraceLog>() { new PhantomTraceLog() { ElapsedTime = 0, Position = player.Position, Expression = "" } }
             };
 
             SoundEffect soundTrack = Loader.LoadSound("dominos_revisitado");
@@ -157,7 +156,11 @@ namespace Phantoms.Scenes
                         ElapsedTime = ElapsedTime,
                         Place = PlaceName,
                         Position = Player.Position / Global.ScreenScale,
-                        IsTeleporting = Player.IsTeleporting
+                        Expression = Player.GetCurrentExpressionName(),
+                        Scale = Player.Scale,
+                        Opacity = Player.Sprite.Opacity,
+                        Rotation = Player.Sprite.Rotation,
+                        Origin = Player.Sprite.Origin
                     });
 
             if (SoundTrack.HasEnded && !Player.IsDisappearing)
