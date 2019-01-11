@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Phantoms.Data;
-using Phantoms.Entities;
+using Phantoms.Entities.Ghostly;
 using Phantoms.Helpers;
 using Phantoms.Manipulators;
 using Phantoms.Scenes;

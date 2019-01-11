@@ -43,13 +43,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Abstracts\Cyclic.cs" />
+    <Compile Include="Entities\Ghostly\PhantomBot.cs" />
+    <Compile Include="Entities\Ghostly\PhantomExpression.cs" />
     <Compile Include="Manipulators\Fade.cs" />
     <Compile Include="Entities\Sprites\Sprite.cs" />
     <Compile Include="Entities\Sprites\AnimatedSprite.cs" />
     <Compile Include="Manipulators\Camera.cs" />
     <Compile Include="Data\PhantomLog.cs" />
     <Compile Include="Entities\Body.cs" />
-    <Compile Include="Entities\Phantom.cs" />
+    <Compile Include="Entities\Ghostly\Phantom.cs" />
     <Compile Include="Entities\Vortex.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Helpers\Loader.cs" />

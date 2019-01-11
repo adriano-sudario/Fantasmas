@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Phantoms.Abstracts;
 using Phantoms.Data;
 using Phantoms.Entities;
+using Phantoms.Entities.Ghostly;
 using Phantoms.Entities.Sprites;
 using Phantoms.Helpers;
 using Phantoms.Manipulators;
