@@ -21,11 +21,15 @@ namespace Phantoms.Entities.Ghostly
         public bool IsBot { get; protected set; }
         public string CurrentPlace { get; set; }
 
-        public Phantom(AnimatedSprite animation, Vector2 position) : base(position, sprite: animation, scale: 5f) 
-            => expression = new PhantomExpression(this);
+        public Phantom(AnimatedSprite animation, Vector2 position) : base(position, sprite: animation, scale: 5f)
+        {
+            expression = new PhantomExpression(this);
+        }
 
-        public Phantom(Texture2D spriteSheet, Vector2 position) : base(position, sprite: GetAnimationDefault(spriteSheet), scale: 5f) 
-            => expression = new PhantomExpression(this);
+        public Phantom(Texture2D spriteSheet, Vector2 position) : base(position, sprite: GetAnimationDefault(spriteSheet), scale: 5f)
+        {
+            expression = new PhantomExpression(this);
+        }
 
         public static Phantom New(Texture2D spriteSheet, Vector2 position)
         {

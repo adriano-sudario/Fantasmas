@@ -12,13 +12,13 @@ namespace Phantoms.Entities.Ghostly
         public enum Expression { Cry, Love, Bored, Sing }
 
         private static Texture2D _expressionSheet;
-        private static Texture2D ExpressionSheet { get => GetTexture(); }
+        private static Texture2D ExpressionSheet { get { return GetTexture(); } }
 
         private Body expressionsBody;
         private Phantom phantom;
-        private AnimatedSprite Animation { get => ((AnimatedSprite)expressionsBody.Sprite); }
+        private AnimatedSprite Animation { get { return ((AnimatedSprite)expressionsBody.Sprite); } }
 
-        public bool IsExpressing { get => Animation.IsPlaying; }
+        public bool IsExpressing { get { return Animation.IsPlaying; } }
 
         public PhantomExpression(Phantom phantom)
         {
