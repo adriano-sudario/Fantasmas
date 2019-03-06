@@ -9,7 +9,7 @@ namespace Phantoms.Entities.Ghostly
 {
     public class Phantom : Body
     {
-        private IInput input = new KeyboardInput();
+        private readonly IInput input = new KeyboardInput();
 
         protected PhantomExpression expression;
         protected AnimatedSprite Animation { get { return (Sprite as AnimatedSprite); } }
@@ -56,7 +56,7 @@ namespace Phantoms.Entities.Ghostly
 
             base.Update(gameTime);
 
-            if (expression.IsExpressing & !IsDisappearing)
+            if (expression.IsExpressing && !IsDisappearing)
                 expression.Update(gameTime);
 
             if (IsBot || IsDisappearing || IsTeleporting)
@@ -76,8 +76,13 @@ namespace Phantoms.Entities.Ghostly
             else if (input.ActivateExpressionFour())
                 expression.ExpressPhantom(PhantomExpression.Expression.Sing);
 
-            if (input.InteractionJustPressed() && !IsTeleporting && CollidesWith(MainGame.World.Vortex))
-                BeginTeleport();
+            if (input.InteractionJustPressed() && !IsTeleporting)
+            {
+                if (CollidesWith(MainGame.World.Vortex))
+                    BeginTeleport();
+                else
+                    expression.ExpressPhantom();
+            }
         }
 
         public void Move(Vector2 movement)
@@ -117,7 +122,6 @@ namespace Phantoms.Entities.Ghostly
             Sprite.Opacity = 1f;
             Sprite.Rotation = 0;
             SetOrigin(0);
-            // Grow(amount: 0.02f, onResizeEnded: (s, ev) => SetOrigin(0));
             Animation.Play();
         }
 

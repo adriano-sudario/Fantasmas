@@ -19,10 +19,16 @@ namespace Phantoms.Entities.Ghostly
         private AnimatedSprite Animation { get { return ((AnimatedSprite)expressionsBody.Sprite); } }
 
         public bool IsExpressing { get { return Animation.IsPlaying; } }
+        public Expression Main { get; private set; }
 
         public PhantomExpression(Phantom phantom)
         {
             Initialize(phantom);
+        }
+
+        public void ExpressPhantom()
+        {
+            ExpressPhantom(GetExpressionName(Main));
         }
 
         public void ExpressPhantom(Expression expression)
@@ -115,6 +121,10 @@ namespace Phantoms.Entities.Ghostly
                     animation.Stop();
                 }
             }, autoPlay: false);
+
+            Array values = Enum.GetValues(typeof(Expression));
+            Random random = new Random();
+            Main = (Expression)values.GetValue(random.Next(values.Length));
 
             expressionsBody = new Body(Vector2.Zero, animation, scale: 3f);
             expressionsBody.SetOrigin(.5f);
