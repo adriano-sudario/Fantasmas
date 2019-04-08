@@ -14,9 +14,9 @@ namespace Phantoms.Entities.Ghostly
         private static Texture2D _expressionSheet;
         private static Texture2D ExpressionSheet { get { return GetTexture(); } }
 
-        private Body expressionsBody;
+        private Body body;
         private Phantom phantom;
-        private AnimatedSprite Animation { get { return ((AnimatedSprite)expressionsBody.Sprite); } }
+        private AnimatedSprite Animation { get { return ((AnimatedSprite)body.Sprite); } }
 
         public bool IsExpressing { get { return Animation.IsPlaying; } }
         public Expression Main { get; private set; }
@@ -40,10 +40,10 @@ namespace Phantoms.Entities.Ghostly
         {
             if (IsExpressing)
                 return;
-
-            UpdatePosition();
+            
             Animation.Stop();
             Animation.Change(expression);
+            UpdatePosition();
             Animation.Play();
         }
 
@@ -57,8 +57,8 @@ namespace Phantoms.Entities.Ghostly
 
         public void UpdatePosition()
         {
-            Vector2 position = new Vector2(phantom.Position.X + (phantom.Width * .5f), phantom.Position.Y - (Animation.Height * .5f) - 30);
-            expressionsBody.MoveTo(position, setFacingDirection: false, keepOnScreenBounds: false);
+            Vector2 position = new Vector2(phantom.Position.X + (phantom.Width * .5f), phantom.Position.Y - (body.Height * .75f));
+            body.MoveTo(position, setFacingDirection: false, keepOnScreenBounds: false);
         }
 
         public void Update(GameTime gameTime)
@@ -74,7 +74,7 @@ namespace Phantoms.Entities.Ghostly
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            expressionsBody.Draw(spriteBatch);
+            body.Draw(spriteBatch);
         }
 
         private string GetExpressionName(Expression expression)
@@ -126,8 +126,8 @@ namespace Phantoms.Entities.Ghostly
             Random random = new Random();
             Main = (Expression)values.GetValue(random.Next(values.Length));
 
-            expressionsBody = new Body(Vector2.Zero, animation, scale: 3f);
-            expressionsBody.SetOrigin(.5f);
+            body = new Body(Vector2.Zero, animation, scale: 3f);
+            body.SetOrigin(.5f);
             this.phantom = phantom;
         }
 
@@ -157,8 +157,8 @@ namespace Phantoms.Entities.Ghostly
         {
             return new Frame[]
             {
-                new Frame() { Name = "love_1", Source = new Rectangle(0, 0, 14, 12), Duration = 250 },
-                new Frame() { Name = "love_2", Source = new Rectangle(14, 0, 14, 12), Duration = 250 }
+                new Frame() { Name = "love_1", Source = new Rectangle(0, 0, 7, 6), Duration = 250 },
+                new Frame() { Name = "love_2", Source = new Rectangle(14, 0, 7, 6), Duration = 250 }
             };
         }
 
