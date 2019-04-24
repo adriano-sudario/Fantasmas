@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Phantoms.Abstracts;
+using Phantoms.CosmosDb.Collections;
 using Phantoms.Data;
 using Phantoms.Entities;
 using Phantoms.Entities.Ghostly;
@@ -11,11 +12,15 @@ using Phantoms.Manipulators;
 using Phantoms.Sounds;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Phantoms.Scenes
 {
     public class World : Cyclic
     {
+        private bool isSaving;
+        private bool hasSaved;
+
         public enum Local { Paradise, GasStation, Lake, LittleHouse, BrownGrass }
 
         public string PlaceName { get; private set; }
@@ -28,25 +33,44 @@ namespace Phantoms.Scenes
 
         public static Local[] ExistingPlaces { get; } = (Local[])Enum.GetValues(typeof(Local));
 
-        public World(Phantom player, List<PhantomBot> phantomBots)
+        public World()
         {
-            Player = player;
-            PhantomBots = phantomBots;
+            Initialize();
+        }
+
+        private void Initialize()
+        {
+            //Screen.Adjust(true);
+            LoadPhantoms();
             Vortex = new Vortex("vortex", Vector2.Zero);
             Random random = new Random();
             Color phantomColor = new Color(random.Next(256), random.Next(256), random.Next(256));
             Player.Sprite.Tint(phantomColor);
             SetPlace(ExistingPlaces[random.Next(ExistingPlaces.Length)]);
             Player.CurrentPlace = PlaceName;
-            player.MoveTo(new Vector2(random.Next(Camera.AreaWidth - player.Width + 1), random.Next(Camera.AreaHeight - player.Height + 1)));
+            Player.MoveTo(new Vector2(random.Next(Camera.AreaWidth - Player.Width + 1), random.Next(Camera.AreaHeight - Player.Height + 1)));
             PlayerLog = new PhantomBotLog()
             {
                 Color = phantomColor,
-                Traces = new List<PhantomTraceLog>() { new PhantomTraceLog() { ElapsedTime = 0, Position = player.Position, Expression = "" } }
+                Traces = new List<PhantomTraceLog>() { new PhantomTraceLog() { ElapsedTime = 0, Position = Player.Position, Expression = "" } }
             };
-
+            
             SoundEffect soundTrack = Loader.LoadSound("dominos_revisitado");
             SoundTrack.Load(soundTrack, play: true, playOnLoop: false);
+        }
+
+        private void LoadPhantoms()
+        {
+            Texture2D phantomTexture = Loader.LoadTexture("fantasminha_white");
+            Phantom player = Phantom.New(phantomTexture, Vector2.Zero);
+
+            List<PhantomBot> phantomBots = new List<PhantomBot>();
+
+            foreach (PhantomBotLog botLog in Global.BotLogs)
+                phantomBots.Add(PhantomBot.New(phantomTexture, botLog));
+
+            Player = player;
+            PhantomBots = phantomBots;
         }
 
         public void TeleportPlayerTo(Local local)
@@ -109,14 +133,19 @@ namespace Phantoms.Scenes
                     break;
             }
 
-            Camera.AreaWidth = Place.Width;
-            Camera.AreaHeight = Place.Height;
+            AdjustCamera();
             Vortex.StopSpin();
             Vortex.SetOrigin(0);
             Vortex.MoveTo(GetVortexPlacePosition(local) * Global.ScreenScale, false);
             Vortex.SetOrigin(.5f);
             Vortex.Spin(Global.HorizontalDirection.Left, 2f);
             Vortex.SetRandomDestiny(GetCurrentLocal());
+        }
+
+        private void AdjustCamera()
+        {
+            Camera.AreaWidth = Place.Width;
+            Camera.AreaHeight = Place.Height;
         }
 
         private Vector2 GetVortexPlacePosition(Local local)
@@ -143,8 +172,46 @@ namespace Phantoms.Scenes
             }
         }
 
+        private async void SavePlayerLog()
+        {
+            isSaving = true;
+
+            try
+            {
+                SavePlayerLogLocally();
+
+                await BotLogCollection.CreateAsync(PlayerLog);
+                Global.BotLogs = await BotLogCollection.GetAsync();
+
+                if (Global.BotLogs.Count() > 9)
+                    await BotLogCollection.DeleteAsync(Global.BotLogs.Take(Global.BotLogs.Count() - 9));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+            isSaving = false;
+            hasSaved = true;
+        }
+
+        private void SavePlayerLogLocally()
+        {
+            List<PhantomBotLog> botLogsList = Global.BotLogs.ToList();
+            botLogsList.Add(PlayerLog);
+            Loader.SaveJsonFile("phatom_bots", botLogsList);
+        }
+
         public override void Update(GameTime gameTime)
         {
+            if (isSaving)
+                return;
+
+            if (Player.IsDisappearing && !isSaving && !hasSaved)
+                SavePlayerLog();
+            else if (Player.HasDisappeared)
+                MainGame.Quit();
+
             ElapsedTime += gameTime.ElapsedGameTime.Milliseconds;
             Player.Update(gameTime);
             Camera.Update(Player);
@@ -172,6 +239,15 @@ namespace Phantoms.Scenes
         }
         
         public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Camera.ViewMatrix);
+
+            DrawEntities(spriteBatch);
+
+            spriteBatch.End();
+        }
+
+        private void DrawEntities(SpriteBatch spriteBatch)
         {
             Place.Draw(spriteBatch);
             Vortex.Draw(spriteBatch);

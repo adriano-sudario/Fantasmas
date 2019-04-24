@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Phantoms.Abstracts;
+using Phantoms.CosmosDb.Collections;
 using Phantoms.Data;
 using Phantoms.Entities.Ghostly;
 using Phantoms.Helpers;
@@ -8,6 +10,8 @@ using Phantoms.Manipulators;
 using Phantoms.Scenes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Phantoms
 {
@@ -19,7 +23,12 @@ namespace Phantoms
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public static World World { get; set; }
+        public static Action Quit { get; private set; }
+        //public static Action Quit { get; private set; }
+
+        //private static bool applyFullScreenAdjustment;
+        //private static bool isFullScreen;
+        //private static Action onFullScreenAdjust;
 
         public MainGame()
         {
@@ -35,9 +44,8 @@ namespace Phantoms
         /// </summary>
         protected override void Initialize()
         {
-            Loader.Initialize(Content);
-
             base.Initialize();
+            Quit = Exit;
         }
 
         /// <summary>
@@ -46,58 +54,25 @@ namespace Phantoms
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            AdjustScreen(true);
-
-            Texture2D phantomTexture = Loader.LoadTexture("fantasminha_white");
-            Phantom player = Phantom.New(phantomTexture, Vector2.Zero);
-            List<PhantomBotLog> botLogs = Loader.LoadDeserializedJsonFile<List<PhantomBotLog>>("phatom_bots");
-            List<PhantomBot> phantomBots = new List<PhantomBot>();
-
-            foreach (PhantomBotLog botLog in botLogs)
-                phantomBots.Add(PhantomBot.New(phantomTexture, botLog));
-
-            World = new World(player, phantomBots);
+            Loader.Initialize(Content);
+            Screen.Initialize(graphics, GraphicsDevice);
+            Screen.Adjust(false);
+            SceneManager.AddScene("Opening", new Opening(Loader.LoadFont("teste")));
+            SetBotLogsAsync();
         }
 
-        public void ToggleFullScreen()
+        public async void SetBotLogsAsync()
         {
-            graphics.IsFullScreen = !graphics.IsFullScreen;
-            AdjustScreen();
-        }
-
-        public void AdjustScreen(bool isFullScreen)
-        {
-            graphics.IsFullScreen = isFullScreen;
-            AdjustScreen();
-        }
-
-        private void AdjustScreen()
-        {
-            if (graphics.IsFullScreen)
+            try
             {
-                Global.ScreenWidth = GraphicsDevice.DisplayMode.Width;
-                Global.ScreenHeight = GraphicsDevice.DisplayMode.Height;
-
-                graphics.PreferredBackBufferWidth = Global.ScreenWidth;
-                graphics.PreferredBackBufferHeight = Global.ScreenHeight;
-                graphics.ApplyChanges();
-
-                decimal scaleX = (decimal)Global.ScreenWidth / GraphicsDeviceManager.DefaultBackBufferWidth;
-                decimal scaleY = (decimal)Global.ScreenHeight / GraphicsDeviceManager.DefaultBackBufferHeight;
-                Global.ScreenScale = (int)Math.Ceiling(scaleX > scaleY ? scaleX : scaleY);
+                Global.BotLogs = await BotLogCollection.GetAsync();
+                Global.BotLogs = Global.BotLogs.Reverse().Take(9);
             }
-            else
+            catch
             {
-                Global.ScreenWidth = GraphicsDeviceManager.DefaultBackBufferWidth;
-                Global.ScreenHeight = GraphicsDeviceManager.DefaultBackBufferHeight;
-                Global.ScreenScale = 1f;
+                Global.BotLogs = Loader.LoadDeserializedJsonFile<List<PhantomBotLog>>("phatom_bots");
             }
-
-            Camera.AreaWidth = World?.Place.Width ?? 0;
-            Camera.AreaHeight = World?.Place.Height ?? 0;
         }
 
         /// <summary>
@@ -116,23 +91,51 @@ namespace Phantoms
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape) || World.Player.HasDisappeared)
-            {
-                if (World.Player.HasDisappeared)
-                {
-                    List<PhantomBotLog> botLogs = Loader.LoadDeserializedJsonFile<List<PhantomBotLog>>("phatom_bots");
-                    botLogs.Add(World.PlayerLog);
-                    if (botLogs.Count > 9)
-                        botLogs.RemoveRange(0, botLogs.Count - 9);
-                    Loader.SaveJsonFile("phatom_bots", botLogs);
-                }
-                Exit();
-            }
+            //if (botLogs != null && World == null)
+            //    LoadWorld();
 
-            World.Update(gameTime);
+            //if (World == null || isSaving)
+            //    return;
+
+            //if (World.Player.IsDisappearing && !isSaving && !hasSaved)
+            //    SavePlayerLog();
+            //else if (World.Player.HasDisappeared)
+            //    Exit();
+            
+            SceneManager.Update(gameTime);
 
             base.Update(gameTime);
         }
+
+        //private async void SavePlayerLog()
+        //{
+        //    isSaving = true;
+
+        //    try
+        //    {
+        //        SavePlayerLogLocally();
+
+        //        await BotLogCollection.CreateAsync(World.PlayerLog);
+        //        botLogs = await BotLogCollection.GetAsync();
+
+        //        if (botLogs.Count() > 9)
+        //            await BotLogCollection.DeleteAsync(botLogs.Take(botLogs.Count() - 9));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex);
+        //    }
+
+        //    isSaving = false;
+        //    hasSaved = true;
+        //}
+
+        //private void SavePlayerLogLocally()
+        //{
+        //    List<PhantomBotLog> botLogsList = botLogs.ToList();
+        //    botLogsList.Add(World.PlayerLog);
+        //    Loader.SaveJsonFile("phatom_bots", botLogsList);
+        //}
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -140,14 +143,8 @@ namespace Phantoms
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
-
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Camera.ViewMatrix);
-
-            World.Draw(spriteBatch);
-
-            spriteBatch.End();
-
+            GraphicsDevice.Clear(Color.Black);
+            SceneManager.Draw(spriteBatch);
             base.Draw(gameTime);
         }
     }

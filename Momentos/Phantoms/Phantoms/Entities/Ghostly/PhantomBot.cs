@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Phantoms.Data;
 using Phantoms.Entities.Sprites;
+using Phantoms.Helpers;
+using Phantoms.Scenes;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,10 +51,11 @@ namespace Phantoms.Entities.Ghostly
             List<PhantomTraceLog> tracesJumped = new List<PhantomTraceLog>();
             PhantomTraceLog nextTrace = traces[currentTraceIndex];
             tracesJumped.Add(nextTrace);
+            World world = SceneManager.GetCurrentScene<World>();
 
             foreach (PhantomTraceLog trace in traces)
             {
-                if (trace.ElapsedTime <= MainGame.World.ElapsedTime)
+                if (trace.ElapsedTime <= world.ElapsedTime)
                 {
                     tracesJumped.Add(trace);
                     nextTrace = trace;
@@ -74,7 +77,7 @@ namespace Phantoms.Entities.Ghostly
                     Sprite.Rotation = trace.Rotation;
                     Sprite.Origin = trace.Origin;
                     CurrentPlace = trace.Place;
-                    IsVisible = CurrentPlace == MainGame.World.PlaceName;
+                    IsVisible = CurrentPlace == world.PlaceName;
                     break;
                 }
             }

@@ -39,6 +39,11 @@ namespace Phantoms.Helpers
             return content.Load<SoundEffect>("Sounds\\" + soundName);
         }
 
+        public static SpriteFont LoadFont(string fontName)
+        {
+            return content.Load<SpriteFont>("Fonts\\" + fontName);
+        }
+
         public static T LoadDeserializedJsonFile<T>(string fileName)
         {
             string jsonString = LoadJsonFile(fileName);

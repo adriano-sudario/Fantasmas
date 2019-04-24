@@ -17,11 +17,31 @@ namespace Phantoms.Entities
         private Fade fade = null;
         private Spin spin = null;
         private Size size = null;
+        private Vector2 position;
+        private float scale;
 
         public Sprite Sprite { get; private set; }
-        public float Scale { get; set; }
+        public float Scale
+        {
+            get { return Sprite?.Scale ?? scale; }
+            set
+            {
+                scale = value;
+                if (Sprite != null)
+                    Sprite.Scale = scale;
+            }
+        }
         public HorizontalDirection FacingDirection { get; set; }
-        public Vector2 Position { get; private set; }
+        public Vector2 Position
+        {
+            get { return Sprite?.Position ?? position; }
+            private set
+            {
+                position = value;
+                if (Sprite != null)
+                    Sprite.Position = position;
+            }
+        }
         public Rectangle Collision
         {
             get
@@ -237,8 +257,7 @@ namespace Phantoms.Entities
             if (!isActive || !IsVisible)
                 return;
 
-            Sprite?.Draw(spriteBatch, Position, scale: Scale, 
-                effect: FacingDirection == HorizontalDirection.Left ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
+            Sprite?.Draw(spriteBatch, effect: FacingDirection == HorizontalDirection.Left ? SpriteEffects.FlipHorizontally : SpriteEffects.None);
         }
     }
 }

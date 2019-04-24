@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Phantoms.Data
 {
     public class PhantomBotLog
     {
+        public string Id { get; set; }
         public Color Color { get; set; }
         public List<PhantomTraceLog> Traces { get; set; }
     }

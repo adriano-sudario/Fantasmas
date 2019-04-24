@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Phantoms.Entities.Sprites;
+using Phantoms.Helpers;
 using Phantoms.Inputs;
 using Phantoms.Interfaces;
+using Phantoms.Scenes;
 using System.Collections.Generic;
 
 namespace Phantoms.Entities.Ghostly
@@ -78,7 +80,7 @@ namespace Phantoms.Entities.Ghostly
 
             if (input.InteractionJustPressed() && !IsTeleporting)
             {
-                if (CollidesWith(MainGame.World.Vortex))
+                if (CollidesWith(SceneManager.GetCurrentScene<World>().Vortex))
                     BeginTeleport();
                 else
                     expression.ExpressPhantom();
@@ -112,8 +114,9 @@ namespace Phantoms.Entities.Ghostly
         {
             if (!IsBot)
             {
-                MainGame.World.TeleportPlayerTo(MainGame.World.Vortex.Destiny);
-                CurrentPlace = MainGame.World.PlaceName;
+                World world = SceneManager.GetCurrentScene<World>();
+                world.TeleportPlayerTo(world.Vortex.Destiny);
+                CurrentPlace = world.PlaceName;
             }
             IsTeleporting = false;
             Scale = ScaleDefault;

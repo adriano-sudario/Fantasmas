@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Phantoms.Entities.Sprites;
+using Phantoms.Interfaces;
 using System;
 
 namespace Phantoms.Manipulators
@@ -8,28 +9,28 @@ namespace Phantoms.Manipulators
     {
         private float amount;
         private float limit;
-        private Sprite fadingSprite;
+        private IVisual fadingComponent;
 
         private event EventHandler onFadeEnded;
 
         public bool HasEnded { get; private set; }
 
-        public Fade(Sprite fadingSprite, float amount, float from, float to, EventHandler onFadeEnded = null)
+        public Fade(IVisual fadingComponent, float amount, float from, float to, EventHandler onFadeEnded = null)
         {
-            this.fadingSprite = fadingSprite;
+            this.fadingComponent = fadingComponent;
             this.amount = amount;
-            fadingSprite.Opacity = from;
+            fadingComponent.Opacity = from;
             limit = to;
             this.onFadeEnded = onFadeEnded;
         }
 
         public void Update(GameTime gameTime)
         {
-            fadingSprite.Opacity += amount;
+            fadingComponent.Opacity += amount;
 
-            if ((Math.Sign(amount) < 0 && fadingSprite.Opacity <= limit) || (Math.Sign(amount) > 0 && fadingSprite.Opacity >= limit))
+            if ((Math.Sign(amount) < 0 && fadingComponent.Opacity <= limit) || (Math.Sign(amount) > 0 && fadingComponent.Opacity >= limit))
             {
-                fadingSprite.Opacity = limit;
+                fadingComponent.Opacity = limit;
                 HasEnded = true;
                 onFadeEnded?.Invoke(this, EventArgs.Empty);
             }

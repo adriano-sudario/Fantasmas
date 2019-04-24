@@ -14,6 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>DesktopGL</MonoGamePlatform>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -43,8 +45,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Abstracts\Cyclic.cs" />
+    <Compile Include="CosmosDb\Collections\BotLogCollection.cs" />
+    <Compile Include="CosmosDb\Database.cs" />
     <Compile Include="Entities\Ghostly\PhantomBot.cs" />
     <Compile Include="Entities\Ghostly\PhantomExpression.cs" />
+    <Compile Include="Helpers\SceneManager.cs" />
+    <Compile Include="Helpers\Screen.cs" />
     <Compile Include="Manipulators\Fade.cs" />
     <Compile Include="Entities\Sprites\Sprite.cs" />
     <Compile Include="Entities\Sprites\AnimatedSprite.cs" />
@@ -59,14 +65,21 @@
     <Compile Include="Interfaces\IInput.cs" />
     <Compile Include="Interfaces\IVisual.cs" />
     <Compile Include="MainGame.cs" />
+    <Compile Include="Manipulators\Font\Writer.cs" />
+    <Compile Include="Manipulators\Font\WriterLine.cs" />
+    <Compile Include="Manipulators\Font\WriterTimeInterval.cs" />
     <Compile Include="Manipulators\Size.cs" />
     <Compile Include="Manipulators\Spin.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scenes\Opening.cs" />
     <Compile Include="Scenes\World.cs" />
     <Compile Include="Sounds\SoundTrack.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Azure.Documents.Client, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.DocumentDB.2.3.0\lib\net45\Microsoft.Azure.Documents.Client.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
@@ -74,6 +87,7 @@
       <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +140,7 @@
       <Link>MonoGame.Framework.dll.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="app.config" />
     <None Include="app.manifest" />
     <None Include="Content\Data\phatom_bots.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -134,6 +149,15 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
+  <Import Project="..\packages\Microsoft.Azure.DocumentDB.Core.2.3.0\build\Microsoft.Azure.DocumentDB.Core.targets" Condition="Exists('..\packages\Microsoft.Azure.DocumentDB.Core.2.3.0\build\Microsoft.Azure.DocumentDB.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Azure.DocumentDB.Core.2.3.0\build\Microsoft.Azure.DocumentDB.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Azure.DocumentDB.Core.2.3.0\build\Microsoft.Azure.DocumentDB.Core.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Azure.DocumentDB.2.3.0\build\Microsoft.Azure.DocumentDB.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Azure.DocumentDB.2.3.0\build\Microsoft.Azure.DocumentDB.targets'))" />
+  </Target>
+  <Import Project="..\packages\Microsoft.Azure.DocumentDB.2.3.0\build\Microsoft.Azure.DocumentDB.targets" Condition="Exists('..\packages\Microsoft.Azure.DocumentDB.2.3.0\build\Microsoft.Azure.DocumentDB.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
