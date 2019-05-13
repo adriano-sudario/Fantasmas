@@ -13,6 +13,20 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Fonts/press_start_2p.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/press_start_2p.spritefont
+
+#begin Fonts/press_start_2p_small.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/press_start_2p_small.spritefont
+
 #begin Fonts/teste.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

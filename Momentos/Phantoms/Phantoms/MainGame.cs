@@ -58,7 +58,7 @@ namespace Phantoms
             Loader.Initialize(Content);
             Screen.Initialize(graphics, GraphicsDevice);
             Screen.Adjust(false);
-            SceneManager.AddScene("Opening", new Opening(Loader.LoadFont("teste")));
+            SceneManager.AddScene("Opening", new Opening());
             SetBotLogsAsync();
         }
 
@@ -71,7 +71,7 @@ namespace Phantoms
             }
             catch
             {
-                Global.BotLogs = Loader.LoadDeserializedJsonFile<List<PhantomBotLog>>("phatom_bots");
+                Global.BotLogs = Loader.LoadDeserializedJsonFile<List<PhantomBotLog>>("phantom_bots");
             }
         }
 

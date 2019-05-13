@@ -28,7 +28,7 @@ namespace Phantoms.Entities.Ghostly
         {
             IsBot = true;
             traces = log.Traces;
-            Sprite.Tint(log.Color);
+            Sprite.Color = log.Color;
         }
 
         public static PhantomBot New(Texture2D spriteSheet, PhantomBotLog log)

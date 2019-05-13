@@ -45,7 +45,7 @@ namespace Phantoms.Scenes
             Vortex = new Vortex("vortex", Vector2.Zero);
             Random random = new Random();
             Color phantomColor = new Color(random.Next(256), random.Next(256), random.Next(256));
-            Player.Sprite.Tint(phantomColor);
+            Player.Sprite.Color = phantomColor;
             SetPlace(ExistingPlaces[random.Next(ExistingPlaces.Length)]);
             Player.CurrentPlace = PlaceName;
             Player.MoveTo(new Vector2(random.Next(Camera.AreaWidth - Player.Width + 1), random.Next(Camera.AreaHeight - Player.Height + 1)));
@@ -199,7 +199,7 @@ namespace Phantoms.Scenes
         {
             List<PhantomBotLog> botLogsList = Global.BotLogs.ToList();
             botLogsList.Add(PlayerLog);
-            Loader.SaveJsonFile("phatom_bots", botLogsList);
+            Loader.SaveJsonFile("phantom_bots", botLogsList);
         }
 
         public override void Update(GameTime gameTime)

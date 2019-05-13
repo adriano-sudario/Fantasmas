@@ -18,7 +18,7 @@ namespace Phantoms.Manipulators.Font
         private int timeInterval;
         private int defaultTimeInterval = 50;
         private bool isWriting;
-        private SpriteFont pressStart2P;
+        private SpriteFont font;
         private List<LineWriter> lineWriters;
         private List<WriterTimeInterval> customTimeIntervals;
         private LineWriter CurrenLineWriter => lineWriters[currentLineIndex];
@@ -26,21 +26,18 @@ namespace Phantoms.Manipulators.Font
         public Action OnComplete { private get; set; }
         public bool IsComplete { get; private set; }
 
-        public Writer(SpriteFont pressStart2P, bool autoStart = true, int defaultTimeInterval = 50, Action onComplete = null)
+        public Writer(SpriteFont font, string text, List<WriterTimeInterval> customTimeIntervals = null,
+            bool autoStart = true, int defaultTimeInterval = 50, Action onComplete = null)
         {
-            this.pressStart2P = pressStart2P;
+            this.font = font;
             this.defaultTimeInterval = defaultTimeInterval;
             OnComplete = onComplete;
             customTimeIntervals = new List<WriterTimeInterval>();
-            text = "Ome...\nVai dá teu bóga.\nSério mesmo.";
-            Dictionary<char, int> dots = new Dictionary<char, int>();
-            customTimeIntervals.Add(new WriterTimeInterval("Ome", text, 500).KeepSameIndex(false));
-            dots.Add('.', 500);
-            customTimeIntervals.AddRange(WriterTimeInterval.GetSpeedPerChar(dots, text));
+            this.text = text;
             //customTimeIntervals.Add(new WriterTimeInterval("direcionais", "Setinhas direcionais para andar.", 500));
-            customTimeIntervals = customTimeIntervals.OrderBy(cti => cti.From).ToList();
+            this.customTimeIntervals = customTimeIntervals?.OrderBy(cti => cti.From).ToList() ?? new List<WriterTimeInterval>();
             lineWriters = new List<LineWriter>();
-            LoadLineWriters(new Vector2(0, 0), 350);
+            LoadLineWriters(new Vector2(0, 0), 800);
             UpdateTimeInterval();
 
             if (autoStart)
@@ -64,7 +61,7 @@ namespace Phantoms.Manipulators.Font
                 if (textChars[i] != '\n')
                     currentLineText.Append(textChars[i]);
 
-                Vector2 lineMeasure = pressStart2P.MeasureString(currentLineText.ToString());
+                Vector2 lineMeasure = font.MeasureString(currentLineText.ToString());
 
                 if (lineMeasure.X > maxWidth)
                 {
@@ -85,7 +82,7 @@ namespace Phantoms.Manipulators.Font
                     else
                     {
                         Vector2 lastPosition = lineWriters.Last().Position;
-                        Vector2 lastMeasure = lineWriters.Last().GetMeasure(pressStart2P);
+                        Vector2 lastMeasure = lineWriters.Last().GetMeasure(font);
                         position = new Vector2(lastPosition.X, lastPosition.Y + lastMeasure.Y + lineSpacing);
                     }
 
@@ -113,6 +110,9 @@ namespace Phantoms.Manipulators.Font
         {
             IsComplete = true;
 
+            foreach (LineWriter lineWriter in lineWriters)
+                lineWriter.Complete();
+
             if (executeOnComplete)
                 OnComplete?.Invoke();
         }
@@ -131,6 +131,17 @@ namespace Phantoms.Manipulators.Font
         {
             Pause();
             Reset();
+        }
+
+        public Rectangle GetArea()
+        {
+            Vector2 measure = Vector2.Zero;
+            Vector2 position = new Vector2(lineWriters.First().Position.X, lineWriters.First().Position.Y);
+
+            foreach (LineWriter lineWriter in lineWriters)
+                measure += lineWriter.GetMeasure(font);
+
+            return new Rectangle((int)position.X, (int)position.Y, (int)measure.X, (int)measure.Y);
         }
 
         public override void Update(GameTime gameTime)
@@ -186,7 +197,7 @@ namespace Phantoms.Manipulators.Font
         public override void Draw(SpriteBatch spriteBatch)
         {
             foreach (LineWriter lineWriter in lineWriters)
-                lineWriter.Display(spriteBatch, pressStart2P, Color.White);
+                lineWriter.Display(spriteBatch, font, Color.White);
         }
     }
 }

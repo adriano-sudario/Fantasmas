@@ -28,8 +28,12 @@ namespace Phantoms.Manipulators.Font
             if (IsComplete)
                 return;
 
-            string textToAppend = Text.Substring(currentDisplayCharIndex, 1);
-            textDisplayed.Append(textToAppend);
+            if (Text.Length > 0)
+            {
+                string textToAppend = Text.Substring(currentDisplayCharIndex, 1);
+                textDisplayed.Append(textToAppend);
+            }
+            
             currentDisplayCharIndex++;
             IsComplete = currentDisplayCharIndex >= Text.Length;
         }

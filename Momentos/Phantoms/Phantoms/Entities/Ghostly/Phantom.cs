@@ -101,8 +101,10 @@ namespace Phantoms.Entities.Ghostly
         protected void BeginTeleport()
         {
             IsTeleporting = true;
+
             if (expression.IsExpressing)
                 expression.StopExpressing();
+
             Animation.Pause();
             SetOrigin(.5f);
             Spin(FacingDirection);
