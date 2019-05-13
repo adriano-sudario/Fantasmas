@@ -9,7 +9,7 @@ namespace Phantoms.Manipulators.Font
         private int currentDisplayCharIndex;
         private StringBuilder textDisplayed = new StringBuilder();
 
-        public Vector2 Position { get; private set; }
+        public Vector2 Position { get; set; }
         public string Text { get; private set; }
         public string TextDisplayed => textDisplayed.ToString();
         public bool IsComplete { get; private set; }

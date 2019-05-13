@@ -25,11 +25,13 @@ namespace Phantoms.Manipulators.Font
 
         public Action OnComplete { private get; set; }
         public bool IsComplete { get; private set; }
+        public int LineSpacing { get; private set; }
 
-        public Writer(SpriteFont font, string text, List<WriterTimeInterval> customTimeIntervals = null,
-            bool autoStart = true, int defaultTimeInterval = 50, Action onComplete = null)
+        public Writer(SpriteFont font, string text, Vector2 position = default(Vector2), int maxWidth = 800, List<WriterTimeInterval> customTimeIntervals = null,
+            bool autoStart = true, int lineSpacing = 5, int defaultTimeInterval = 50, Action onComplete = null)
         {
             this.font = font;
+            LineSpacing = lineSpacing;
             this.defaultTimeInterval = defaultTimeInterval;
             OnComplete = onComplete;
             customTimeIntervals = new List<WriterTimeInterval>();
@@ -37,14 +39,14 @@ namespace Phantoms.Manipulators.Font
             //customTimeIntervals.Add(new WriterTimeInterval("direcionais", "Setinhas direcionais para andar.", 500));
             this.customTimeIntervals = customTimeIntervals?.OrderBy(cti => cti.From).ToList() ?? new List<WriterTimeInterval>();
             lineWriters = new List<LineWriter>();
-            LoadLineWriters(new Vector2(0, 0), 800);
+            LoadLineWriters(position, maxWidth);
             UpdateTimeInterval();
 
             if (autoStart)
                 Start();
         }
 
-        private void LoadLineWriters(Vector2 initialPosition, int maxWidth, int lineSpacing = 5)
+        private void LoadLineWriters(Vector2 initialPosition, int maxWidth)
         {
             StringBuilder currentLineText = new StringBuilder();
 
@@ -83,7 +85,7 @@ namespace Phantoms.Manipulators.Font
                     {
                         Vector2 lastPosition = lineWriters.Last().Position;
                         Vector2 lastMeasure = lineWriters.Last().GetMeasure(font);
-                        position = new Vector2(lastPosition.X, lastPosition.Y + lastMeasure.Y + lineSpacing);
+                        position = new Vector2(lastPosition.X, lastPosition.Y + lastMeasure.Y + LineSpacing);
                     }
 
                     LineWriter line = new LineWriter(currentLineText.ToString(), position);
@@ -139,9 +141,24 @@ namespace Phantoms.Manipulators.Font
             Vector2 position = new Vector2(lineWriters.First().Position.X, lineWriters.First().Position.Y);
 
             foreach (LineWriter lineWriter in lineWriters)
-                measure += lineWriter.GetMeasure(font);
+            {
+                Vector2 lineMeasure = lineWriter.GetMeasure(font);
+                float width = lineMeasure.X > measure.X ? lineMeasure.X : measure.X;
+                float height = measure.Y + lineMeasure.Y + LineSpacing;
+                measure = new Vector2(width, height);
+            }
 
             return new Rectangle((int)position.X, (int)position.Y, (int)measure.X, (int)measure.Y);
+        }
+
+        public void SetPosition(Vector2 position)
+        {
+            for (int i = 0; i < lineWriters.Count; i++)
+            {
+                position = i == 0 ? position :
+                    new Vector2(position.X, lineWriters[i - 1].Position.Y + lineWriters[i - 1].GetMeasure(font).Y + LineSpacing);
+                lineWriters[i].Position = position;
+            }
         }
 
         public override void Update(GameTime gameTime)
