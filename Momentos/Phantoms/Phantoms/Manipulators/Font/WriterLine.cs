@@ -57,9 +57,9 @@ namespace Phantoms.Manipulators.Font
             return font.MeasureString(Text);
         }
 
-        public void Display(SpriteBatch spriteBatch, SpriteFont font, Color color)
+        public void Display(SpriteBatch spriteBatch, SpriteFont font, Color color, float opacity = 1)
         {
-            spriteBatch.DrawString(font, textDisplayed, Position, color);
+            spriteBatch.DrawString(font, textDisplayed, Position, color * opacity);
         }
     }
 }

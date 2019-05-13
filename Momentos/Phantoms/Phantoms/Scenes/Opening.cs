@@ -2,13 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using Phantoms.Abstracts;
 using Phantoms.Helpers;
+using Phantoms.Interfaces;
+using Phantoms.Manipulators;
 using Phantoms.Manipulators.Font;
-using Phantoms.Sounds;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Phantoms.Scenes
 {
@@ -27,16 +26,16 @@ namespace Phantoms.Scenes
             commandsWriter = new Writer(pressStart2PSmall, text, position: new Vector2(20, 20), maxWidth: 760,
                 onComplete: () =>
                 {
+                    text = "a aplicação vai entrar em modo de tela cheia e fechar automaticamente após o término da música.\n";
+                    //text += "recomenda-se não fechar manualmente.\n";
+                    text += "você está prestes a perder cerca de 1 minuto e meio da tua vida.\n";
+                    text += "tem certeza disto?";
+
                     Dictionary<char, int> customChars = new Dictionary<char, int>();
                     customChars.Add('.', 500);
                     customChars.Add(' ', 0);
                     List<WriterTimeInterval> customTimeIntervals = new List<WriterTimeInterval>();
                     customTimeIntervals.AddRange(WriterTimeInterval.GetSpeedPerChar(customChars, text));
-
-                    text = "a aplicação vai entrar em modo de tela cheia e fechar automaticamente após o término da música.\n";
-                    //text += "recomenda-se não fechar manualmente.\n";
-                    text += "você está prestes a perder cerca de 1 minuto e meio da tua vida.\n";
-                    text += "tem certeza disto?";
 
                     Writer warningWriter = null;
                     Rectangle commandsWriterArea = commandsWriter.GetArea();
@@ -45,42 +44,31 @@ namespace Phantoms.Scenes
                     {
                         // Change to make options appear
 
-                        // warningWriter.Stop();
-                        //Action changeScene = () =>
-                        //{
-                        //    Screen.Adjust(true);
-                        //    SceneManager.Wait(2500, () => SceneManager.AddScene("World", new World(), true));
-                        //};
+                        commandsWriter.FadeOut();
 
-                        //SceneManager.Wait(1000, changeScene);
-
-                        // SoundTrack.FadeOut(fadeIncrement: .01f, onFadeEnded: changeScene);
+                        //warningWriter.Stop();
                     });
                     writers.Add(warningWriter);
                 });
 
-            writers.Add(commandsWriter);
-
             commandsWriter.Complete(true);
-            //commandsWriterArea = commandsWriter.GetArea();
-            //commandsWriter.SetPosition(new Vector2(400 - (float)(commandsWriterArea.Width * .5), 20));
+            writers.Add(commandsWriter);
+        }
 
-            //writer = new Writer(pressStart2P,
-            //    onComplete: () =>
-            //    {
-            //        // Change to make options appear
+        private void BeginSceneTransition()
+        {
+            // todo
 
-            //        writer.Stop();
-            //        Action changeScene = () =>
-            //        {
-            //            Screen.Adjust(true);
-            //            SceneManager.Wait(2500, () => SceneManager.AddScene("World", new World(), true));
-            //        };
+            //Action changeScene = () =>
+            //{
+            //    Screen.Adjust(true);
+            //    SceneManager.Wait(2500, () => SceneManager.AddScene("World", new World(), true));
+            //};
 
-            //        SceneManager.Wait(1000, changeScene);
+            //foreach (Writer writer in writers)
+            //    writer.FadeOut();
 
-            //        // SoundTrack.FadeOut(fadeIncrement: .01f, onFadeEnded: changeScene);
-            //    });
+            // SoundTrack.FadeOut(fadeIncrement: .01f, onFadeEnded: changeScene);
         }
 
         public override void Update(GameTime gameTime)

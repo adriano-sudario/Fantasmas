@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Phantoms.Abstracts;
 using Phantoms.Helpers;
+using Phantoms.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,9 @@ using System.Text;
 
 namespace Phantoms.Manipulators.Font
 {
-    public class Writer : Cyclic
+    public class Writer : Cyclic, IVisual
     {
+        private Fade fade = null;
         private string text;
         private int currentCharIndex;
         private int currentLineIndex;
@@ -20,12 +22,21 @@ namespace Phantoms.Manipulators.Font
         private bool isWriting;
         private SpriteFont font;
         private List<LineWriter> lineWriters;
-        private List<WriterTimeInterval> customTimeIntervals;
+        private List<WriterTimeInterval> customTimeIntervals = new List<WriterTimeInterval>();
         private LineWriter CurrenLineWriter => lineWriters[currentLineIndex];
 
         public Action OnComplete { private get; set; }
         public bool IsComplete { get; private set; }
         public int LineSpacing { get; private set; }
+
+        public int Width => GetArea().Width;
+        public int Height => GetArea().Height;
+
+        public float Rotation { get; set; } = 0;
+        public float Opacity { get; set; } = 1;
+        public float Scale { get; set; } = 1;
+        public Vector2 Origin { get; set; } = Vector2.Zero;
+        public Vector2 Position { get => lineWriters?.First().Position ?? Vector2.Zero; set => SetPosition(value); }
 
         public Writer(SpriteFont font, string text, Vector2 position = default(Vector2), int maxWidth = 800, List<WriterTimeInterval> customTimeIntervals = null,
             bool autoStart = true, int lineSpacing = 5, int defaultTimeInterval = 50, Action onComplete = null)
@@ -34,7 +45,6 @@ namespace Phantoms.Manipulators.Font
             LineSpacing = lineSpacing;
             this.defaultTimeInterval = defaultTimeInterval;
             OnComplete = onComplete;
-            customTimeIntervals = new List<WriterTimeInterval>();
             this.text = text;
             //customTimeIntervals.Add(new WriterTimeInterval("direcionais", "Setinhas direcionais para andar.", 500));
             this.customTimeIntervals = customTimeIntervals?.OrderBy(cti => cti.From).ToList() ?? new List<WriterTimeInterval>();
@@ -138,7 +148,7 @@ namespace Phantoms.Manipulators.Font
         public Rectangle GetArea()
         {
             Vector2 measure = Vector2.Zero;
-            Vector2 position = new Vector2(lineWriters.First().Position.X, lineWriters.First().Position.Y);
+            Vector2 position = Position;
 
             foreach (LineWriter lineWriter in lineWriters)
             {
@@ -161,10 +171,32 @@ namespace Phantoms.Manipulators.Font
             }
         }
 
+        public void FadeIn(float amount = .01f, EventHandler onFadeEnded = null) => Fade(Math.Abs(amount), 0, 1, onFadeEnded);
+
+        public void FadeOut(float amount = .01f, EventHandler onFadeEnded = null) => Fade(-Math.Abs(amount), 1, 0, onFadeEnded);
+
+        private void Fade(float amount, float from, float to, EventHandler onFadeEnded = null)
+        {
+            fade = new Fade(this, amount, from, to, (sender, e) =>
+            {
+                StopFade();
+                onFadeEnded?.Invoke(sender, EventArgs.Empty);
+            });
+        }
+
+        public void StopFade() => fade = null;
+
         public override void Update(GameTime gameTime)
         {
+            fade?.Update(gameTime);
+
             if (IsComplete || !isWriting)
                 return;
+
+            if (timeInterval == 10000)
+            {
+                int oooxi = 0;
+            }
             
             SceneManager.Wait(timeInterval, () =>
             {
@@ -214,7 +246,7 @@ namespace Phantoms.Manipulators.Font
         public override void Draw(SpriteBatch spriteBatch)
         {
             foreach (LineWriter lineWriter in lineWriters)
-                lineWriter.Display(spriteBatch, font, Color.White);
+                lineWriter.Display(spriteBatch, font, Color.White, Opacity);
         }
     }
 }
