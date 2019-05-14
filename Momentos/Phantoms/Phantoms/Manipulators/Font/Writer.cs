@@ -192,11 +192,6 @@ namespace Phantoms.Manipulators.Font
 
             if (IsComplete || !isWriting)
                 return;
-
-            if (timeInterval == 10000)
-            {
-                int oooxi = 0;
-            }
             
             SceneManager.Wait(timeInterval, () =>
             {

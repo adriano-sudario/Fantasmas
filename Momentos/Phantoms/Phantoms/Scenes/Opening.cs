@@ -5,6 +5,7 @@ using Phantoms.Helpers;
 using Phantoms.Interfaces;
 using Phantoms.Manipulators;
 using Phantoms.Manipulators.Font;
+using Phantoms.Sounds;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace Phantoms.Scenes
         {
             SpriteFont pressStart2P = Loader.LoadFont("press_start_2p");
             SpriteFont pressStart2PSmall = Loader.LoadFont("press_start_2p_small");
+
+            SoundTrack.Load(Loader.LoadSound("crujoa"), play: true);
 
             string text = "[SETINHAS]: andar [BARRA DE ESPAÇO]: entrar no vortex\n[1]: amar [2]: cantar [3]: xolar [4]: bodiar\n\n";
             Writer commandsWriter = null;
@@ -44,7 +47,7 @@ namespace Phantoms.Scenes
                     {
                         // Change to make options appear
 
-                        commandsWriter.FadeOut();
+                        BeginSceneTransition();
 
                         //warningWriter.Stop();
                     });
@@ -65,10 +68,10 @@ namespace Phantoms.Scenes
             //    SceneManager.Wait(2500, () => SceneManager.AddScene("World", new World(), true));
             //};
 
-            //foreach (Writer writer in writers)
-            //    writer.FadeOut();
+            foreach (Writer writer in writers)
+                writer.FadeOut();
 
-            // SoundTrack.FadeOut(fadeIncrement: .01f, onFadeEnded: changeScene);
+            SoundTrack.FadeOut(fadeIncrement: .01f, onFadeEnded: null);
         }
 
         public override void Update(GameTime gameTime)
