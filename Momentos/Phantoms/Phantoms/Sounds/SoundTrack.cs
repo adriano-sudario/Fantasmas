@@ -81,6 +81,9 @@ namespace Phantoms.Sounds
 
             Position += gameTime.ElapsedGameTime;
 
+            if (Position > Duration)
+                Position = Duration - Position;
+
             if (isFading)
             {
                 float volume = song.Volume + fadeIncrement;

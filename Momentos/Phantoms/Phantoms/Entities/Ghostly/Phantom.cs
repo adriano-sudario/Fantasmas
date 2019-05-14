@@ -70,13 +70,13 @@ namespace Phantoms.Entities.Ghostly
             Move(direction * (Speed * Scale * Global.ScreenScale));
 
             if (input.ActivateExpressionOne())
-                expression.ExpressPhantom(PhantomExpression.Expression.Bored);
-            else if (input.ActivateExpressionTwo())
-                expression.ExpressPhantom(PhantomExpression.Expression.Cry);
-            else if (input.ActivateExpressionThree())
                 expression.ExpressPhantom(PhantomExpression.Expression.Love);
-            else if (input.ActivateExpressionFour())
+            else if (input.ActivateExpressionTwo())
                 expression.ExpressPhantom(PhantomExpression.Expression.Sing);
+            else if (input.ActivateExpressionThree())
+                expression.ExpressPhantom(PhantomExpression.Expression.Cry);
+            else if (input.ActivateExpressionFour())
+                expression.ExpressPhantom(PhantomExpression.Expression.Bored);
 
             if (input.InteractionJustPressed() && !IsTeleporting)
             {

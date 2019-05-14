@@ -69,6 +69,8 @@
     <Compile Include="Manipulators\Font\Writer.cs" />
     <Compile Include="Manipulators\Font\WriterLine.cs" />
     <Compile Include="Manipulators\Font\WriterTimeInterval.cs" />
+    <Compile Include="Manipulators\Selection.cs" />
+    <Compile Include="Manipulators\Selector.cs" />
     <Compile Include="Manipulators\Size.cs" />
     <Compile Include="Manipulators\Spin.cs" />
     <Compile Include="Program.cs" />
