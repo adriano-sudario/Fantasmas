@@ -39,7 +39,7 @@ namespace Phantoms.Scenes
                 "tem certeza disto?";
 
             public override string StartButton => "tá";
-            public override string ExitButton => "dx qto";
+            public override string ExitButton => "eu msm n, vai pra lá";
 
             public override string PortugueseButton => "";
         }
@@ -59,7 +59,9 @@ namespace Phantoms.Scenes
             public override string EnglishButton => "";
         }
 
-        private List<Writer> writers;
+        private Writer commandsWriter;
+        private Writer warningWriter;
+        private Selector selector;
         private SpriteFont pressStart2P;
         private SpriteFont pressStart2PSmall;
         private Text text;
@@ -74,9 +76,7 @@ namespace Phantoms.Scenes
         private void Load(Location location)
         {
             SetText(location);
-            writers = new List<Writer>();
-            Writer commandsWriter = null;
-
+            selector = null;
             commandsWriter = new Writer(pressStart2PSmall, text.Tutorial, position: new Vector2(20, 20), maxWidth: 760,
                 onComplete: () =>
                 {
@@ -85,25 +85,25 @@ namespace Phantoms.Scenes
                     customChars.Add(' ', 0);
                     List<WriterTimeInterval> customTimeIntervals = new List<WriterTimeInterval>();
                     customTimeIntervals.AddRange(WriterTimeInterval.GetSpeedPerChar(customChars, text.Warning));
-
-                    Writer warningWriter = null;
+                    
                     Rectangle commandsWriterArea = commandsWriter.GetArea();
                     warningWriter = new Writer(pressStart2P, text.Warning, position: new Vector2(20, commandsWriterArea.Bottom + 20), maxWidth: 760, customTimeIntervals: customTimeIntervals,
                     onComplete: () =>
                     {
                         // Change to make options appear
 
-                        BeginSceneTransition();
+                        // BeginSceneTransition();
+
+                        LoadSelector();
 
                         //warningWriter.Stop();
                     });
-                    writers.Add(warningWriter);
                 });
 
             commandsWriter.Complete(true);
-            writers.Add(commandsWriter);
 
-            //SoundTrack.Load(Loader.LoadSound("crujoa"), play: true);
+            if (!SoundTrack.IsPlaying)
+                SoundTrack.Load(Loader.LoadSound("crujoa"), play: true);
         }
 
         private void SetText(Location location)
@@ -120,34 +120,72 @@ namespace Phantoms.Scenes
             }
         }
 
+        private void LoadSelector()
+        {
+            List<Selection> options = GetOptions();
+            options.First().IsHovered = true;
+            selector = new Selector(options, new Vector2(20, warningWriter.GetArea().Bottom + warningWriter.LineSpacing + 20), 
+                isEnabled: false);
+            selector.FadeIn(onFadeEnded: (sender, e) => selector.IsEnabled = true);
+        }
+
+        private List<Selection> GetOptions()
+        {
+            List<Selection> options = new List<Selection>();
+            AddOption(ref options, text.StartButton, BeginSceneTransition);
+            AddOption(ref options, text.PortugueseButton, () => Load(Location.Portuguese));
+            AddOption(ref options, text.EnglishButton, () => Load(Location.English));
+            AddOption(ref options, text.ExitButton, () => MainGame.Quit());
+            //AddOption(ref options, text.FrenchButton, () => Load(Location.Portuguese));
+            //AddOption(ref options, text.GermanButton, () => Load(Location.Portuguese));
+            //AddOption(ref options, text.SpanishButton, () => Load(Location.Portuguese));
+
+            return options;
+        }
+
+        private void AddOption(ref List<Selection> options, string text, Action onSelected)
+        {
+            if (string.IsNullOrEmpty(text))
+                return;
+
+            options.Add(new Selection(text, onSelected));
+        }
+
         private void BeginSceneTransition()
         {
-            // todo
+            Action changeScene = () =>
+            {
+                Screen.Adjust(true);
+                SceneManager.Wait(2500, () => SceneManager.AddScene("World", new World(), true));
+            };
 
-            //Action changeScene = () =>
-            //{
-            //    Screen.Adjust(true);
-            //    SceneManager.Wait(2500, () => SceneManager.AddScene("World", new World(), true));
-            //};
+            selector.IsEnabled = false;
+            commandsWriter.FadeOut();
+            warningWriter.FadeOut();
 
-            foreach (Writer writer in writers)
-                writer.FadeOut();
-
-            SoundTrack.FadeOut(fadeIncrement: .01f, onFadeEnded: null);
+            if (SoundTrack.IsPlaying)
+            {
+                selector.FadeOut();
+                SoundTrack.FadeOut(fadeIncrement: .01f, onFadeEnded: changeScene);
+            }
+            else
+                selector.FadeOut(onFadeEnded: (sender, e) => changeScene());
         }
 
         public override void Update(GameTime gameTime)
         {
-            foreach (Writer writer in writers)
-                writer.Update(gameTime);
+            commandsWriter?.Update(gameTime);
+            warningWriter?.Update(gameTime);
+            selector?.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
 
-            foreach (Writer writer in writers)
-                writer.Draw(spriteBatch);
+            commandsWriter?.Draw(spriteBatch);
+            warningWriter?.Draw(spriteBatch);
+            selector?.Draw(spriteBatch);
 
             spriteBatch.End();
         }

@@ -72,6 +72,11 @@ namespace Phantoms.Inputs
             return previousKeyboardState.IsKeyUp(interactionKey) && currentKeyboardState.IsKeyDown(interactionKey);
         }
 
+        public bool EnterJustPressed()
+        {
+            return previousKeyboardState.IsKeyUp(Keys.Enter) && currentKeyboardState.IsKeyDown(Keys.Enter);
+        }
+
         public bool ActivateExpressionOne()
         {
             return previousKeyboardState.IsKeyUp(expressionOneKey) && currentKeyboardState.IsKeyDown(expressionOneKey);

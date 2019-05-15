@@ -13,6 +13,7 @@ namespace Phantoms.Manipulators
         public Vector2 Position { get; set; }
         public string Text { get; set; }
         public Action OnSelected { get; set; }
+        public bool IsHovered { get; set; }
 
         public Selection(string text, Action onSelected)
         {

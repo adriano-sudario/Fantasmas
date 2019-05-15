@@ -14,6 +14,7 @@ namespace Phantoms.Sounds
         public static bool HasEnded { get { return song.State == SoundState.Stopped; } }
         public static TimeSpan Duration { get; private set; }
         public static TimeSpan Position { get; private set; }
+        public static bool IsPlaying { get { return song != null && song.State == SoundState.Playing; } }
 
         public static void Load(SoundEffect song, bool play = false, bool playOnLoop = true)
         {
