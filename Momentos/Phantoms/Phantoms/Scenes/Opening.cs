@@ -14,7 +14,7 @@ namespace Phantoms.Scenes
 {
     public class Opening : Cyclic
     {
-        enum Location { Portuguese, English }
+        enum Location { Portuguese, English, French, German, Spanish }
 
         abstract class Text
         {
@@ -31,7 +31,7 @@ namespace Phantoms.Scenes
 
         class BrazilianText : Text
         {
-            public override string Tutorial => "[SETINHAS]: andar [BARRA DE ESPAÇO]: entrar no vortex\n[1]: amar [2]: cantar [3]: xolar [4]: bodiar\n\n";
+            public override string Tutorial => "[SETINHAS]: andar [BARRA DE ESPAÇO]: interagir\n[1]: amar [2]: cantar [3]: xolar [4]: bodiar\n\n";
 
             public override string Warning => 
                 "a aplicação vai entrar em modo de tela cheia e fechar automaticamente após o término da música.\n" +
@@ -46,7 +46,7 @@ namespace Phantoms.Scenes
 
         class EnglishText : Text
         {
-            public override string Tutorial => "[ARROW KEYS]: walk [SPACE BAR]: enter the void\n[1]: love [2]: sing [3]: cry [4]: get bored\n\n";
+            public override string Tutorial => "[ARROW KEYS]: walk [SPACE BAR]: interact\n[1]: love [2]: sing [3]: cry [4]: get bored\n\n";
 
             public override string Warning =>
                 "the application will enter full-screen mode and close automatically after the song ends.\n" +
@@ -57,6 +57,51 @@ namespace Phantoms.Scenes
             public override string ExitButton => "thanks but no thanks";
 
             public override string EnglishButton => "";
+        }
+
+        class FrenchText : Text
+        {
+            public override string Tutorial => "[FLÈCHE DIRECTIONNELLES]: marcher [ESPACE]: intéragir\n[1]: aimer [2]: chanter [3]: pleurer [4]: se caler pépére\n\n";
+
+            public override string Warning =>
+                 "L'application va se mettre en mode plein écran et se fermer automatiquement à la fin de la musique.\n" +
+                 "Tu dois être prêt à perdre environ 1 minute et demie de ta vie.\n" +
+                 "tu es sûr de ça ?";
+
+            public override string StartButton => "ouais";
+            public override string ExitButton => "bon en vrai je me sens pas";
+
+            public override string FrenchButton => "";
+        }
+
+        class GermanText : Text
+        {
+            public override string Tutorial => "[SETINHAS]: andar [BARRA DE ESPAÇO]: interagir\n[1]: amar [2]: cantar [3]: xolar [4]: bodiar\n\n";
+
+            public override string Warning =>
+                "a aplicação vai entrar em modo de tela cheia e fechar automaticamente após o término da música.\n" +
+                "você está prestes a perder cerca de 1 minuto e meio da tua vida.\n" +
+                "tem certeza disto?";
+
+            public override string StartButton => "tá";
+            public override string ExitButton => "eu msm n, vai pra lá";
+
+            public override string PortugueseButton => "";
+        }
+
+        class SpanishText : Text
+        {
+            public override string Tutorial => "[SETINHAS]: andar [BARRA DE ESPAÇO]: interagir\n[1]: amar [2]: cantar [3]: xolar [4]: bodiar\n\n";
+
+            public override string Warning =>
+                "a aplicação vai entrar em modo de tela cheia e fechar automaticamente após o término da música.\n" +
+                "você está prestes a perder cerca de 1 minuto e meio da tua vida.\n" +
+                "tem certeza disto?";
+
+            public override string StartButton => "tá";
+            public override string ExitButton => "eu msm n, vai pra lá";
+
+            public override string PortugueseButton => "";
         }
 
         private Writer commandsWriter;
@@ -117,6 +162,18 @@ namespace Phantoms.Scenes
                 case Location.English:
                     text = new EnglishText();
                     break;
+
+                case Location.French:
+                    text = new FrenchText();
+                    break;
+
+                case Location.German:
+                    text = new GermanText();
+                    break;
+
+                case Location.Spanish:
+                    text = new SpanishText();
+                    break;
             }
         }
 
@@ -135,10 +192,10 @@ namespace Phantoms.Scenes
             AddOption(ref options, text.StartButton, BeginSceneTransition);
             AddOption(ref options, text.PortugueseButton, () => Load(Location.Portuguese));
             AddOption(ref options, text.EnglishButton, () => Load(Location.English));
+            AddOption(ref options, text.FrenchButton, () => Load(Location.French));
+            AddOption(ref options, text.GermanButton, () => Load(Location.German));
+            AddOption(ref options, text.SpanishButton, () => Load(Location.Spanish));
             AddOption(ref options, text.ExitButton, () => MainGame.Quit());
-            //AddOption(ref options, text.FrenchButton, () => Load(Location.Portuguese));
-            //AddOption(ref options, text.GermanButton, () => Load(Location.Portuguese));
-            //AddOption(ref options, text.SpanishButton, () => Load(Location.Portuguese));
 
             return options;
         }
