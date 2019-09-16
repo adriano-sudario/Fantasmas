@@ -16,14 +16,14 @@ namespace Phantoms.Entities.Ghostly
         protected PhantomExpression expression;
         protected AnimatedSprite Animation { get { return (Sprite as AnimatedSprite); } }
 
-        public float Speed { get { return .6f; } }
+        public float Speed { get { return 15f; } }
         public bool HasDisappeared { get { return !isActive; } private set { isActive = !value; } }
         public bool IsDisappearing { get; private set; }
         public bool IsTeleporting { get; private set; }
         public bool IsBot { get; protected set; }
         public string CurrentPlace { get; set; }
 
-        public Phantom(AnimatedSprite animation, Vector2 position) : base(position, sprite: animation, scale: 5f)
+        public Phantom(AnimatedSprite animation, Vector2 position) : base(position, sprite: animation, scale: .2f)
         {
             expression = new PhantomExpression(this);
         }
@@ -41,11 +41,53 @@ namespace Phantoms.Entities.Ghostly
         protected static AnimatedSprite GetAnimationDefault(Texture2D spriteSheet)
         {
             Dictionary<string, Frame[]> animationFrames = new Dictionary<string, Frame[]>();
-            animationFrames.Add("Idle", new Frame[] { new Frame() { Name = "idle", Source = new Rectangle(22, 0, 11, 11), Duration = 500 } });
+            animationFrames.Add("Idle", new Frame[] 
+            {
+                new Frame()
+                {
+                    Name = "idle_1",
+                    Source = new Rectangle(0, 0, 287, 293),
+                    Duration = 100
+                },
+                new Frame()
+                {
+                    Name = "idle_2",
+                    Source = new Rectangle(287, 0, 287, 293),
+                    Duration = 100
+                },
+                new Frame()
+                {
+                    Name = "idle_3",
+                    Source = new Rectangle(287 * 2, 0, 287, 293),
+                    Duration = 100
+                }
+            });
             animationFrames.Add("Walk", new Frame[]
             {
-                new Frame() { Name = "walk_1", Source = new Rectangle(0, 0, 11, 11), Duration = 100 },
-                new Frame() { Name = "walk_2", Source = new Rectangle(11, 0, 11, 11), Duration = 100 }
+                new Frame()
+                {
+                    Name = "walk_1",
+                    Source = new Rectangle(287 * 3, 0, 287, 293),
+                    Duration = 100
+                },
+                new Frame()
+                {
+                    Name = "walk_2",
+                    Source = new Rectangle(287 * 4, 0, 287, 293),
+                    Duration = 100
+                },
+                new Frame()
+                {
+                    Name = "walk_3",
+                    Source = new Rectangle(287 * 5, 0, 287, 293),
+                    Duration = 100
+                },
+                new Frame()
+                {
+                    Name = "walk_4",
+                    Source = new Rectangle(287 * 6, 0, 287, 293),
+                    Duration = 100
+                }
             });
 
             return new AnimatedSprite(spriteSheet, animationFrames);
@@ -105,7 +147,7 @@ namespace Phantoms.Entities.Ghostly
             if (expression.IsExpressing)
                 expression.StopExpressing();
 
-            Animation.Pause();
+            //Animation.Pause();
             SetOrigin(.5f);
             Spin(FacingDirection);
             FadeOut();

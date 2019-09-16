@@ -61,7 +61,7 @@ namespace Phantoms.Scenes
 
         private void LoadPhantoms()
         {
-            Texture2D phantomTexture = Loader.LoadTexture("fantasminha_white");
+            Texture2D phantomTexture = Loader.LoadTexture("fantasmitos");
             Phantom player = Phantom.New(phantomTexture, Vector2.Zero);
 
             List<PhantomBot> phantomBots = new List<PhantomBot>();
@@ -240,7 +240,7 @@ namespace Phantoms.Scenes
         
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Camera.ViewMatrix);
+            spriteBatch.Begin(SpriteSortMode.Deferred, transformMatrix: Camera.ViewMatrix);
 
             DrawEntities(spriteBatch);
 

@@ -212,7 +212,7 @@ namespace Phantoms.Scenes
         {
             Action changeScene = () =>
             {
-                Screen.Adjust(true);
+                //Screen.Adjust(true);
                 SceneManager.Wait(2500, () => SceneManager.AddScene("World", new World(), true));
             };
 
