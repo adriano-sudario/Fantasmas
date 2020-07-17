@@ -39,7 +39,7 @@ namespace Phantoms.Scenes
                 "tem certeza disto?";
 
             public override string StartButton => "tá";
-            public override string ExitButton => "eu msm n, vai pra lá";
+            public override string ExitButton => "n";
 
             public override string PortugueseButton => "";
         }
