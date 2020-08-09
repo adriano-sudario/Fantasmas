@@ -141,9 +141,9 @@
 /processorParam:Quality=Best
 /build:Sounds/crujoa.mp3
 
-#begin Sounds/dominos_revisitado.mp3
+#begin Sounds/Passeio.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Sounds/dominos_revisitado.mp3
+/build:Sounds/Passeio.mp3
 

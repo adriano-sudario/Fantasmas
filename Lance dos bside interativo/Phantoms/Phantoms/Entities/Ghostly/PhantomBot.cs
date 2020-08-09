@@ -14,12 +14,14 @@ namespace Phantoms.Entities.Ghostly
         private List<PhantomTraceLog> traces;
         private int currentTraceIndex = 0;
 
-        public PhantomBot(AnimatedSprite sprite, PhantomBotLog log) : base(sprite, log.Traces.First().Position)
+        public PhantomBot(AnimatedSprite sprite, PhantomBotLog log) : 
+            base(sprite, log.Traces.FirstOrDefault()?.Position ?? default)
         {
             Initialize(log);
         }
 
-        public PhantomBot(Texture2D spriteSheet, PhantomBotLog log) : base(spriteSheet, log.Traces.First().Position)
+        public PhantomBot(Texture2D spriteSheet, PhantomBotLog log) : 
+            base(spriteSheet, log.Traces.FirstOrDefault()?.Position ?? default)
         {
             Initialize(log);
         }

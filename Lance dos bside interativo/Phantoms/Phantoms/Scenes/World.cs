@@ -55,7 +55,7 @@ namespace Phantoms.Scenes
                 Traces = new List<PhantomTraceLog>() { new PhantomTraceLog() { ElapsedTime = 0, Position = Player.Position, Expression = "" } }
             };
             
-            SoundEffect soundTrack = Loader.LoadSound("dominos_revisitado");
+            SoundEffect soundTrack = Loader.LoadSound("Passeio");
             SoundTrack.Load(soundTrack, play: true, playOnLoop: false);
         }
 
